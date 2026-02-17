@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scoreboard Admin</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 30px;
+    }
+
+    input, button {
+      margin: 5px;
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Scoreboard Control Panel</h2>
+
+<input id="teamA" placeholder="Team A Name" />
+<input id="teamB" placeholder="Team B Name" />
+<br><br>
+
+<button onclick="increaseA()">+ Team A</button>
+<button onclick="decreaseA()">- Team A</button>
+
+<button onclick="increaseB()">+ Team B</button>
+<button onclick="decreaseB()">- Team B</button>
+
+<br><br>
+
+<button onclick="reset()">Reset</button>
+
+<script>
+  const socket = io();
+
+  let scoreboard = {
+    teamA: "TEAM A",
+    teamB: "TEAM B",
+    scoreA: 0,
+    scoreB: 0
+  };
+
+  function update() {
+    scoreboard.teamA = document.getElementById("teamA").value || scoreboard.teamA;
+    scoreboard.teamB = document.getElementById("teamB").value || scoreboard.teamB;
+    socket.emit("changeScore", scoreboard);
+  }
+
+  function increaseA() {
+    scoreboard.scoreA++;
+    update();
+  }
+
+  function decreaseA() {
+    if (scoreboard.scoreA > 0) scoreboard.scoreA--;
+    update();
+  }
+
+  function increaseB() {
+    scoreboard.scoreB++;
+    update();
+  }
+
+  function decreaseB() {
+    if (scoreboard.scoreB > 0) scoreboard.scoreB--;
+    update();
+  }
+
+  function reset() {
+    scoreboard.scoreA = 0;
+    scoreboard.scoreB = 0;
+    update();
+  }
+</script>
+
+</body>
+</html>
